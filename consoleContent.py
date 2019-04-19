@@ -1,6 +1,20 @@
 import os
 import re
 
+class GitControl:
+    def initGit(self):
+        initMessage = os.popen("git init")
+        print(initMessage)
+
+    def addGit(self):
+        addMessage = os.popen("git add *")
+        print(addMessage)
+    
+    def commitGit(self, message):
+        commitMessage = os.popen("git commit -m \"{message}\"".format(message=message))
+        print(commitMessage)
+
+
 class GitLog:
     """
         파일 이름을 통해 초기화 후
@@ -48,10 +62,14 @@ class GitLog:
             print("\n")
 
 if __name__ == "__main__":
-    gitlog = GitLog("hello.txt")
-    gitlog.makeMessageList()
+    #gitlog = GitLog("hello.txt")
+    #gitlog.makeMessageList()
     #gitlog.displayChange()
-    gitlog.diffContents(0, 2)
+    #gitlog.diffContents(0, 10)
+    gitcontrol = GitControl()
+    gitcontrol.initGit()
+    gitcontrol.addGit()
+    gitcontrol.commitGit("git control test for new class")
 
 #add_pattern = re.compile("{\+(.*)\+}")
 #sub_pattern = re.compile("\[-(.*)-\]")
