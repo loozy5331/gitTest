@@ -1,21 +1,14 @@
 import os
 import re
-"""
- HEAD~1(바로 전 내용)에서 HEAD(현재)의 차이점을 단어 별로 출력
-<예시 내용>
-1. new text!
-2. new text add word!
-3. new text word!
-4. new text add word! {+new contents!+} 
-5. new
-text!
-6. hello world!
-"""
-
-#contents = os.popen("git diff HEAD~1 HEAD --word-diff=plain").readlines()
-#contents = [content.strip() for content in contents] # remove /n
 
 class GitLog:
+    """
+        파일 이름을 통해 초기화 후
+        makeMessageList()를 통해 message들을 뽑아내고
+        displayChange()를 통해 현재 내용과 어떤 것이 다른지 확인 가능
+        diffContents(pivotNum, targetNum): pivotNum을 기준으로 targetNum의 내용과 어떻게 다른지 확인. 메시지는 targetNum의 것을 사용
+
+    """
     def __init__(self, fileName):
         self.fileName = fileName
         self.messageList = list()
@@ -28,6 +21,21 @@ class GitLog:
             if(i == 4 or (i - 4) % 6 == 0):
                 self.messageList.append(line)
                 print("line {}: {}".format(i, line))
+
+    def diffContents(self, pivotNum, targetNum):
+        if(targetNum >= len(self.messageList)):
+            print("targetNum is out of range!")
+            return
+        contents = os.popen("git diff --word-diff=plain HEAD~{targetNum} HEAD~{pivotNum} {fileName}".format(targetNum=targetNum, 
+                                                                                                            pivotNum=pivotNum, 
+                                                                                                            fileName=self.fileName))
+        contents = [content.strip() for content in contents] # remove \n
+        print("======================================================")
+        print("commit number {targetNum}".format(targetNum=targetNum))
+        print("message: {message}".format(message=self.messageList[targetNum - 1]))
+        for content in contents:
+            print(content)
+
 
     def displayChange(self):
         for i, message in enumerate(self.messageList):
@@ -42,7 +50,8 @@ class GitLog:
 if __name__ == "__main__":
     gitlog = GitLog("hello.txt")
     gitlog.makeMessageList()
-    gitlog.displayChange()
+    #gitlog.displayChange()
+    gitlog.diffContents(0, 2)
 
 #add_pattern = re.compile("{\+(.*)\+}")
 #sub_pattern = re.compile("\[-(.*)-\]")
