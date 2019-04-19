@@ -14,9 +14,9 @@ text!
 messageList = list()
 
 contents = os.popen("git diff HEAD~1 HEAD~2 --word-diff=plain").readlines()
-contents = [content.strip() for content in contents]
+contents = [content.strip() for content in contents] # remove /n
 logs = os.popen("git log").readlines()
-logs = [log.strip() for log in logs]
+logs = [log.strip() for log in logs] # remove /n
 
 # for i, line in enumerate(logs):
 #     if(i == 4 or (i - 4) % 6 == 0):
@@ -27,10 +27,8 @@ add_pattern = re.compile("{\+(.*)\+}")
 sub_pattern = re.compile("\[-(.*)-\]")
 
 for i, content in enumerate(contents):
-    contentWordList = content.split(" ")
-    for j, content in enumerate(contentWordList):
-        if(re.search(add_pattern, content)):
-            print("({}, {}) {}".format(i, j, content))
-        #print(re.findall(sub_pattern, content))
+    if(re.search(add_pattern, content)):
+        start, end = re.search(add_pattern, content).span()
+        print(content[start:end])
     
     
