@@ -62,14 +62,15 @@ class GitLog:
             print("\n")
 
 if __name__ == "__main__":
-    #gitlog = GitLog("hello.txt")
-    #gitlog.makeMessageList()
+    gitlog = GitLog("hello.txt")
+    gitlog.makeMessageList()
     #gitlog.displayChange()
-    #gitlog.diffContents(0, 10)
-    gitcontrol = GitControl()
-    gitcontrol.initGit()
-    gitcontrol.addGit()
-    gitcontrol.commitGit("git control test for new class")
+    gitlog.diffContents(0, 1)
+
+    # gitcontrol = GitControl()
+    # gitcontrol.initGit()
+    # gitcontrol.addGit()
+    # gitcontrol.commitGit("git control test for new class")
 
 #add_pattern = re.compile("{\+(.*)\+}")
 #sub_pattern = re.compile("\[-(.*)-\]")
