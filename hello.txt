@@ -1,2 +1,3 @@
-1. new text
-2. next line
+1. new text 그리고 중간에 들어갔을 때는 어떻게 반응?
+2. next 중간 line
+한글도 가능한지 확인
