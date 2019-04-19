@@ -2,6 +2,9 @@ import os
 import re
 
 class GitControl:
+    """
+        console 창에 git을 다루기 위한 클래스
+    """
     def initGit(self):
         initMessage = os.popen("git init")
         print(initMessage)
@@ -44,12 +47,24 @@ class GitLog:
                                                                                                             pivotNum=pivotNum, 
                                                                                                             fileName=self.fileName))
         contents = [content.strip() for content in contents] # remove \n
+        contents = self.removeOtherInfo(contents)
         print("======================================================")
         print("commit number {targetNum}".format(targetNum=targetNum))
         print("message: {message}".format(message=self.messageList[targetNum - 1]))
         for content in contents:
-            print(content)
+            self.changeForAddSubPatter(content)
 
+    def changeForAddSubPatter(self, content):
+        add_pattern = re.compile("\{\+(.*)\+\}")
+        sub_pattern = re.compile("\[-(.*)-\]") 
+        if(re.search(add_pattern, content)):
+            content = re.sub("\{\+", "<b>", content)
+            content = re.sub("\+\}", "</b>", content)
+        if(re.search(sub_pattern, content)):
+            content = re.sub(sub_pattern, "", content)
+        if(len(content.strip()) == 0):
+            return
+        print(content)
 
     def displayChange(self):
         for i, message in enumerate(self.messageList):
@@ -61,23 +76,29 @@ class GitLog:
                 print(content)
             print("\n")
 
+    def removeOtherInfo(self, contents):
+        lineNum = 0
+        modifiedContents = list()
+        pattern = re.compile("^@@")
+        for i, content in enumerate(contents):
+            if(re.search(pattern, content)):
+                lineNum = i
+                break
+        for i in range(lineNum, len(contents)):
+            modifiedContents.append(contents[i])
+        return modifiedContents
+            
+
+
 if __name__ == "__main__":
     gitlog = GitLog("hello.txt")
     gitlog.makeMessageList()
     #gitlog.displayChange()
-    gitlog.diffContents(0, 1)
+    gitlog.diffContents(1, 5)
 
     # gitcontrol = GitControl()
     # gitcontrol.initGit()
     # gitcontrol.addGit()
     # gitcontrol.commitGit("git control test for new class")
-
-#add_pattern = re.compile("{\+(.*)\+}")
-#sub_pattern = re.compile("\[-(.*)-\]")
-
-# for i, content in enumerate(contents):
-#     if(re.search(add_pattern, content)):
-#         start, end = re.search(add_pattern, content).span()
-#         print(content[start:end])
     
     
